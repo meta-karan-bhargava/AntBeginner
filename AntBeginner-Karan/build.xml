@@ -1,0 +1,71 @@
+<?xml version = "1.0"?>
+<project name = "DevOps.Ant.Beginner" default = "intro" >
+	<!-- The properties file  -->
+	<property file = "build.properties" />
+
+	<!-- Introduction  -->
+	<target name = "intro">
+		 <echo>Hello !!</echo>
+		 <echo>Goal - DevOps.Ant.Beginner</echo>
+		 <echo>Name - Karan Bhargava</echo>
+		 <echo>Email - karan.bhargava@metacube.com</echo>
+		 <echo>Project - FinancialForce</echo>
+		 <echo>Team - M11</echo>
+	</target>
+
+	<!-- target to get info anout apache ant  -->
+	<target name = "info" > 
+	    <echo>Ant version ${ant.version}</echo>
+	  	<echo>Build file located at ${ant.file}</echo>
+	  	<echo>JDK Version ${ant.java.version}</echo>
+	  	<echo>Location  of ANT jar file ${ant.core.lib}</echo>
+	  	<echo>Home directory is ${ant.home}</echo>
+	  	<echo>Home directory of Ant Libaray files ${ant.library.dir}</echo>
+	</target>
+
+	<!-- target to compile java file -->
+	<target name = "compile">
+    	<javac srcdir = "." />
+  	</target>
+
+  	<!-- target to demonstrate setting sys property via java -->
+	<target name = "sysPropDemo" depends = "compile">
+		<input message= "Please enter your name:" addproperty = "NAME" />
+		<java classname="SayHello" fork="true">
+			<sysproperty key="name.property" value="${NAME}" />
+		</java>
+	</target>
+
+	<!-- target to echo current Directory  -->
+	<target name = "currDir" >
+		<property name = "path" value = "${ant.file}" />
+		<echo>current Directory is ${path}</echo>
+	</target>
+
+	<!-- target to demonstrate login using build.properties file  -->
+	<target name = "loginDemo" >
+		<input message= "Please enter your profile:" addproperty = "PROFILE" />
+		<input message= "Please enter your password:" addproperty = "PASSWORD" />
+		<condition property="login" value="${devMessage}">
+			<and>
+				<equals arg1 = "dev" arg2 = "${PROFILE}" casesensitive = "false"/>
+				<equals arg1 = "DEV123" arg2 = "${PASSWORD}" casesensitive = "true"/>
+			</and>
+  		</condition>
+  		<condition property="login" value="${testMessage}">
+			<and>
+				<equals arg1 = "test" arg2 = "${PROFILE}" casesensitive = "false"/>
+				<equals arg1 = "TEST123" arg2 = "${PASSWORD}" casesensitive = "true"/>
+			</and>
+  		</condition>
+  		<condition property="login" value="${prodMessage}">
+			<and>
+				<equals arg1 = "prod" arg2 = "${PROFILE}" casesensitive = "false"/>
+				<equals arg1 = "PROD123" arg2 = "${PASSWORD}" casesensitive = "true"/>
+			</and>
+  		</condition>
+  		<fail message="${errorMessage}" unless="login"/>
+  		<echo message="${login}"/>
+	</target>
+	
+</project>

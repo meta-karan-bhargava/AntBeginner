@@ -1,0 +1,66 @@
+<?xml version = "1.0"?>
+<project name = "fax" basedir = "." default = "build">
+	<!-- The properties file   -->
+   <property file="build.properties" > </property >
+
+   <!-- The source classes classpath   -->
+   <path id = "master-classpath">
+      <fileset dir = "${web.dir}/WEB-INF/lib">
+         <include name = "*.jar"/>
+      </fileset>
+      <pathelement path = "${build.dir}"/>
+   </path>
+
+   <!-- The test classes classpath   -->
+   <path id="jUnit-classpath" >
+	    <fileset dir = "${web.dir}/WEB-INF/lib">
+        	<include name = "*.jar"/>
+      	</fileset>
+      	<pathelement path = "${build.dir}"/>
+   </path >
+
+   <!-- Creates directories and other dependencies   -->
+   <target name = "init" depends = "clean" description = "Creates directories and other dependencies">
+      <mkdir dir = "${build.dir}"/>
+      <mkdir dir = "${test.reports.dir}"/>
+   </target>
+
+   <!-- Compile source and test java files  -->
+   <target name = "build" depends = "init" description = "Compile source tree java files">
+      <echo >Compiling now... </echo >
+      <javac destdir = "${build.dir}" >
+         <src path = "${src.dir}"/>
+         <classpath refid = "master-classpath"/>
+      </javac>
+      <echo >Compilation successful! </echo >
+   </target>
+ 	
+ 	<!-- Clean output directories  -->
+   <target name = "clean" description = "Clean output directories">
+      <delete>
+         <fileset dir = "${build.dir}">
+            <include name = "**/*.class"/>
+         </fileset>
+      </delete>
+      <delete dir="${dest.dir}" / >
+   </target>
+
+   <!-- target to run unit tests and generate reports  -->
+   <target name="test" >
+        <junit printsummary="yes" fork="true" haltonfailure="yes" >
+            <classpath refid="jUnit-classpath" / >
+            <formatter type="plain" / >
+            <batchtest fork="yes" todir="${test.reports.dir}" >
+                <fileset dir="${src.dir}" >
+                    <include name="**/*Test.java" / >
+                </fileset >
+            </batchtest >
+        </junit >
+    </target >
+
+    <!-- target to create jar for source files  -->
+   <target name="builddest" depends="build,test" >
+        <jar destfile="${dest.dir}/.jar" basedir="${bin.dir}" excludes="**/*Test.class" >
+        </jar >
+    </target >
+</project>
