@@ -1,5 +1,5 @@
 <?xml version = "1.0"?>
-<project name = "fax" basedir = "." default = "build">
+<project name = "AntBeginner" basedir = "." default = "build">
 	<!-- The properties file   -->
    <property file="build.properties" > </property >
 
